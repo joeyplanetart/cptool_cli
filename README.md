@@ -12,7 +12,29 @@
 
 ## 快速开始
 
-### 1. 一键安装
+### 方式1: 从 GitHub 安装（推荐）
+
+```bash
+pip install git+https://github.com/yourusername/cptool_cli.git
+playwright install chromium
+cptools --version
+```
+
+### 方式2: 一键安装脚本
+
+**Linux/Mac:**
+```bash
+./install_from_github.sh
+```
+
+**Windows:**
+```bash
+install_from_github.bat
+```
+
+### 方式3: 本地安装
+
+如果已克隆仓库：
 
 **Linux/Mac:**
 ```bash
@@ -26,26 +48,6 @@ cd cptool_cli
 git clone https://github.com/yourusername/cptool_cli.git
 cd cptool_cli
 setup_venv.bat
-```
-
-### 2. 激活虚拟环境
-
-```bash
-# Linux/Mac
-source venv/bin/activate
-
-# Windows
-venv\Scripts\activate
-```
-
-### 3. 运行截图
-
-```bash
-cptools screenshot \
-  --host http://example.com \
-  --csv data.csv \
-  --log log.log \
-  --html result.html
 ```
 
 ## 📚 完整文档
