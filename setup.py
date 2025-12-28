@@ -6,8 +6,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="cptools",
     version="1.0.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Joey Zhou",
+    author_email="Joeyz@planetart.com",
     description="命令行工具集，包含截屏等功能",
     long_description=long_description,
     long_description_content_type="text/markdown",
