@@ -25,7 +25,8 @@ from cptools.utils.dingding import send_dingding_notification
 @click.option('--timeout', default=30000, type=int, help='页面加载超时时间（毫秒，默认：30000）')
 @click.option('--width', default=1920, type=int, help='浏览器窗口宽度（默认：1920）')
 @click.option('--height', default=1080, type=int, help='浏览器窗口高度（默认：1080）')
-def screenshot(host, csv_file, output, log, html, concurrency, dingding_webhook, timeout, width, height):
+@click.option('--template', default='default', type=click.Choice(['default', 'terminal', 'minimal']), help='HTML报告模板（默认：default）')
+def screenshot(host, csv_file, output, log, html, concurrency, dingding_webhook, timeout, width, height, template):
     """网页截屏工具
     
     从CSV文件读取URL列表并进行截图。CSV文件应包含以下列：
@@ -53,6 +54,7 @@ def screenshot(host, csv_file, output, log, html, concurrency, dingding_webhook,
     logger.info(f"并发数: {concurrency}")
     logger.info(f"超时时间: {timeout}ms")
     logger.info(f"窗口大小: {width}x{height}")
+    logger.info(f"报告模板: {template}")
     logger.info("=" * 80)
     
     # 检查Playwright是否已安装
@@ -107,8 +109,8 @@ def screenshot(host, csv_file, output, log, html, concurrency, dingding_webhook,
     
     # 生成HTML报告
     try:
-        generate_html_report(results, html, title="截屏报告")
-        logger.info(f"HTML报告已生成: {html}")
+        generate_html_report(results, html, title="截屏报告", template=template)
+        logger.info(f"HTML报告已生成: {html} (模板: {template})")
     except Exception as e:
         logger.error(f"生成HTML报告失败: {str(e)}")
     
