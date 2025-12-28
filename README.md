@@ -12,34 +12,74 @@
 
 ## 安装
 
-### 1. 克隆仓库
+### 方式1: 自动安装（推荐）
 
+使用提供的安装脚本自动创建虚拟环境并安装所有依赖：
+
+**Linux/Mac:**
+```bash
+git clone https://github.com/yourusername/cptool_cli.git
+cd cptool_cli
+./setup_venv.sh
+```
+
+**Windows:**
+```bash
+git clone https://github.com/yourusername/cptool_cli.git
+cd cptool_cli
+setup_venv.bat
+```
+
+### 方式2: 手动安装
+
+**1. 克隆仓库**
 ```bash
 git clone https://github.com/yourusername/cptool_cli.git
 cd cptool_cli
 ```
 
-### 2. 安装依赖
-
+**2. 创建虚拟环境**
 ```bash
-pip install -r requirements.txt
+# Linux/Mac
+python3 -m venv venv
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
 ```
 
-或者使用可编辑模式安装：
-
+**3. 安装依赖**
 ```bash
+pip install --upgrade pip
 pip install -e .
 ```
 
-### 3. 安装Playwright浏览器驱动
-
-首次运行需要安装Playwright的浏览器驱动：
-
+**4. 安装Playwright浏览器驱动**
 ```bash
 playwright install chromium
 ```
 
 ## 使用方法
+
+### 激活虚拟环境
+
+**每次使用前必须先激活虚拟环境：**
+
+```bash
+# Linux/Mac
+source venv/bin/activate
+
+# Windows
+venv\Scripts\activate
+```
+
+激活后，命令行提示符前会显示 `(venv)`
+
+退出虚拟环境：
+```bash
+deactivate
+```
 
 ### 截屏工具
 

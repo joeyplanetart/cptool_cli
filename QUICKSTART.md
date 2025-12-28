@@ -2,39 +2,75 @@
 
 ## 安装步骤
 
-### 1. 克隆或下载项目
+### 方式1: 一键安装（推荐）
 
+**Linux/Mac:**
+```bash
+git clone <your-repository-url>
+cd cptool_cli
+./setup_venv.sh
+```
+
+脚本会自动完成：
+- ✓ 检查Python环境
+- ✓ 创建虚拟环境
+- ✓ 升级pip
+- ✓ 安装项目依赖
+- ✓ 安装Playwright浏览器
+- ✓ 验证安装
+
+**Windows:**
+```bash
+git clone <your-repository-url>
+cd cptool_cli
+setup_venv.bat
+```
+
+### 方式2: 手动安装
+
+**1. 克隆或下载项目**
 ```bash
 git clone <your-repository-url>
 cd cptool_cli
 ```
 
-### 2. 创建虚拟环境（推荐）
-
+**2. 创建虚拟环境**
 ```bash
+# Linux/Mac
 python3 -m venv venv
-source venv/bin/activate  # Linux/Mac
-# 或
-venv\Scripts\activate  # Windows
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
 ```
 
-### 3. 安装项目
-
+**3. 升级pip并安装项目**
 ```bash
-# 方式1: 开发模式安装（推荐用于开发）
+pip install --upgrade pip
 pip install -e .
-
-# 方式2: 安装依赖
-pip install -r requirements.txt
 ```
 
-### 4. 安装Playwright浏览器驱动
-
+**4. 安装Playwright浏览器驱动**
 ```bash
 playwright install chromium
 ```
 
 ## 基本使用
+
+### 重要：激活虚拟环境
+
+**每次使用前必须先激活虚拟环境！**
+
+```bash
+# Linux/Mac
+source venv/bin/activate
+
+# Windows
+venv\Scripts\activate
+```
+
+激活后，命令行提示符前会显示 `(venv)`
 
 ### 1. 准备CSV文件
 
