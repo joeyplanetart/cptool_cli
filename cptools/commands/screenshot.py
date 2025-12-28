@@ -3,6 +3,7 @@ import click
 import asyncio
 import csv
 import random
+import shutil
 from pathlib import Path
 from urllib.parse import urlparse, urljoin
 from datetime import datetime
@@ -109,9 +110,23 @@ def screenshot(host, csv_file, output, log, html, concurrency,
 
     logger.info(f"从CSV文件中读取到 {len(urls)} 个URL")
 
-    # 创建输出目录
+    # 清理旧文件
     output_dir = Path(output)
+    html_path = Path(html)
+
+    # 删除旧的截图目录
+    if output_dir.exists():
+        logger.info(f"删除旧的截图目录: {output_dir}")
+        shutil.rmtree(output_dir)
+
+    # 删除旧的HTML报告
+    if html_path.exists():
+        logger.info(f"删除旧的HTML报告: {html_path}")
+        html_path.unlink()
+
+    # 创建输出目录
     output_dir.mkdir(parents=True, exist_ok=True)
+    logger.info(f"创建新的截图目录: {output_dir}")
 
     # 执行截图任务
     start_time = datetime.now()
