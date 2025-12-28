@@ -41,11 +41,11 @@ from cptools.utils.dingding import send_dingding_notification
     '--timeout', default=30000, type=int,
     help='页面加载超时时间（毫秒，默认：30000）')
 @click.option(
-    '--width', default=1920, type=int,
-    help='浏览器窗口宽度（默认：1920）')
+    '--width', default=2560, type=int,
+    help='浏览器窗口宽度（默认：2560，2K分辨率）')
 @click.option(
-    '--height', default=1080, type=int,
-    help='浏览器窗口高度（默认：1080）')
+    '--height', default=1440, type=int,
+    help='浏览器窗口高度（默认：1440，2K分辨率）')
 @click.option(
     '--template', default='default',
     type=click.Choice(['default', 'terminal', 'minimal']),
@@ -404,8 +404,10 @@ async def screenshot_single_page(
             await asyncio.sleep(delay)
 
             # 🔥 反爬虫机制2: 轻量级上下文配置 + 真实浏览器特征
+            # 高清晰度设置：启用设备像素比 (device_scale_factor)
             context = await browser.new_context(
                 viewport={'width': width, 'height': height},
+                device_scale_factor=2,  # 2x DPI，提高截图清晰度
                 user_agent=(
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                     'AppleWebKit/537.36 (KHTML, like Gecko) '
