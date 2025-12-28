@@ -2,6 +2,7 @@
 import click
 import asyncio
 import csv
+import random
 from pathlib import Path
 from urllib.parse import urlparse, urljoin
 from datetime import datetime
@@ -225,10 +226,50 @@ async def run_screenshot_tasks(
     results = []
     
     async with async_playwright() as p:
-        # 启动浏览器
+        # 启动浏览器 - 添加反爬虫和性能优化参数
         try:
-            browser = await p.chromium.launch(headless=True)
-            logger.info("浏览器启动成功")
+            # 轻量级浏览器启动参数（针对低配置服务器优化 + 反爬虫）
+            launch_args = [
+                '--no-sandbox',
+                '--disable-dev-shm-usage',  # 重要：低内存环境
+                '--disable-setuid-sandbox',
+                '--disable-gpu',  # 重要：节省资源
+                '--disable-software-rasterizer',
+                '--disable-extensions',
+                '--disable-background-networking',  # 减少后台网络请求
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-breakpad',
+                '--disable-client-side-phishing-detection',
+                '--disable-component-update',
+                '--disable-default-apps',
+                '--disable-domain-reliability',
+                '--disable-features=AudioServiceOutOfProcess',
+                '--disable-hang-monitor',
+                '--disable-ipc-flooding-protection',
+                '--disable-notifications',
+                '--disable-offer-store-unmasked-wallet-cards',
+                '--disable-popup-blocking',
+                '--disable-print-preview',
+                '--disable-prompt-on-repost',
+                '--disable-renderer-backgrounding',
+                '--disable-sync',
+                '--disable-translate',
+                '--metrics-recording-only',
+                '--no-first-run',
+                '--mute-audio',
+                '--safebrowsing-disable-auto-update',
+                '--enable-automation',
+                '--password-store=basic',
+                '--use-mock-keychain',
+            ]
+            
+            browser = await p.chromium.launch(
+                headless=True,
+                args=launch_args,
+                chromium_sandbox=False,
+            )
+            logger.info("浏览器启动成功（已启用反爬虫优化）")
         except Exception as e:
             logger.error(f"启动浏览器失败: {str(e)}")
             logger.error("请确保已安装Playwright浏览器: playwright install chromium")
@@ -309,21 +350,53 @@ async def screenshot_single_page(
         screenshot_path = output_dir / filename
         
         page = None
+        context = None
         try:
-            # 创建新页面
+            # 🔥 反爬虫机制1: 随机延迟（模拟人类行为）
+            delay = random.uniform(1.5, 3.5)
+            logger.debug(f"[{index}] 随机延迟 {delay:.2f} 秒")
+            await asyncio.sleep(delay)
+            
+            # 🔥 反爬虫机制2: 轻量级上下文配置 + 真实浏览器特征
             context = await browser.new_context(
                 viewport={'width': width, 'height': height},
-                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                locale='en-US',
+                ignore_https_errors=True,  # 忽略 HTTPS 错误
             )
+            
             page = await context.new_page()
             
-            # 导航到页面
-            await page.goto(full_url, timeout=timeout, wait_until='networkidle')
+            # 设置超时
+            page.set_default_navigation_timeout(timeout)
+            page.set_default_timeout(timeout)
             
-            # 等待一小段时间确保页面完全渲染
-            await asyncio.sleep(1)
+            # 🔥 反爬虫机制3: 使用 domcontentloaded 而不是完全加载（更快，更像真实浏览）
+            resp = await page.goto(full_url, wait_until='domcontentloaded')
             
-            # 截图
+            # 🔥 反爬虫机制4: 尝试等待网络空闲，但不强制（避免超时）
+            try:
+                await page.wait_for_load_state('networkidle', timeout=3000)
+            except Exception:
+                # 超时不影响截图，继续执行
+                logger.debug(f"[{index}] 网络空闲等待超时，继续截图")
+                pass
+            
+            # 检查 HTTP 状态码
+            if resp is not None and resp.status >= 400:
+                error_msg = f"HTTP {resp.status}"
+                logger.warning(f"[{index}] HTTP 错误: {full_url} - {error_msg}")
+                await context.close()
+                return {
+                    'url': full_url,
+                    'name': name,
+                    'screenshot_path': '',
+                    'status': 'failed',
+                    'error': error_msg
+                }
+            
+            # 🔥 反爬虫机制5: 使用 JPEG 格式 + 降低质量（更快，更小）
+            # 但保持 PNG 格式以确保质量（根据需求调整）
             await page.screenshot(path=str(screenshot_path), full_page=True)
             
             logger.info(f"[{index}] 截图成功: {full_url}")
@@ -342,9 +415,9 @@ async def screenshot_single_page(
             error_msg = str(e)
             logger.error(f"[{index}] 截图失败: {full_url} - {error_msg}")
             
-            if page:
+            if context:
                 try:
-                    await page.context.close()
+                    await context.close()
                 except:
                     pass
             
