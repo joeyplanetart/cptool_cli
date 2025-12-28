@@ -10,11 +10,9 @@
 - 📢 **钉钉通知**: 支持任务完成后发送钉钉通知
 - 📝 **日志记录**: 完整的日志记录，便于追踪和调试
 
-## 安装
+## 快速开始
 
-### 方式1: 自动安装（推荐）
-
-使用提供的安装脚本自动创建虚拟环境并安装所有依赖：
+### 1. 一键安装
 
 **Linux/Mac:**
 ```bash
@@ -30,41 +28,7 @@ cd cptool_cli
 setup_venv.bat
 ```
 
-### 方式2: 手动安装
-
-**1. 克隆仓库**
-```bash
-git clone https://github.com/yourusername/cptool_cli.git
-cd cptool_cli
-```
-
-**2. 创建虚拟环境**
-```bash
-# Linux/Mac
-python3 -m venv venv
-source venv/bin/activate
-
-# Windows
-python -m venv venv
-venv\Scripts\activate
-```
-
-**3. 安装依赖**
-```bash
-pip install --upgrade pip
-pip install -e .
-```
-
-**4. 安装Playwright浏览器驱动**
-```bash
-playwright install chromium
-```
-
-## 使用方法
-
-### 激活虚拟环境
-
-**每次使用前必须先激活虚拟环境：**
+### 2. 激活虚拟环境
 
 ```bash
 # Linux/Mac
@@ -74,36 +38,68 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-激活后，命令行提示符前会显示 `(venv)`
+### 3. 运行截图
 
-退出虚拟环境：
 ```bash
-deactivate
+cptools screenshot \
+  --host http://example.com \
+  --csv data.csv \
+  --log log.log \
+  --html result.html
 ```
+
+## 📚 完整文档
+
+详细文档请查看 [docs](docs/) 目录：
+
+- **[快速开始指南](docs/getting-started/QUICKSTART.md)** - 5分钟快速上手
+- **[使用示例](docs/getting-started/EXAMPLES.md)** - 丰富的实战示例
+- **[命令速查表](docs/reference/CHEATSHEET.md)** - 快速命令参考
+- **[开发指南](docs/development/DEVELOPMENT.md)** - 贡献代码指南
+
+**完整文档索引**: [docs/README.md](docs/README.md)
+
+## 主要命令
 
 ### 截屏工具
 
-#### 基本用法
-
 ```bash
-cptools screenshot --host http://www.cafepress.com --csv data.csv --log log.log --html result.html
+cptools screenshot [选项]
 ```
 
-#### 参数说明
+**常用选项：**
 
-- `--host`: 默认的主机地址（当CSV中的URL没有域名时使用）
-- `--csv`: CSV文件路径，包含要截图的URL列表
-- `--output`: 截图保存目录（默认：./screenshots）
-- `--log`: 日志文件路径（默认：./screenshot.log）
-- `--html`: HTML报告输出路径（默认：./result.html）
-- `--concurrency`: 并发数量（默认：5）
-- `--dingding-webhook`: 钉钉机器人Webhook URL（可选）
+| 选项 | 说明 |
+|------|------|
+| `--host`, `-h` | 默认主机地址（必需）|
+| `--csv` | CSV文件路径（必需）|
+| `--output`, `-o` | 截图保存目录 |
+| `--log`, `-l` | 日志文件路径 |
+| `--html` | HTML报告路径 |
+| `-c` | 并发数量 |
 
-#### CSV文件格式
+**示例：**
 
-CSV文件应包含以下列：
+```bash
+# 基本使用
+cptools screenshot --host http://example.com --csv urls.csv
 
-**格式1（推荐）：**
+# 高并发
+cptools screenshot --host http://example.com --csv urls.csv -c 10
+
+# 完整配置
+cptools screenshot \
+  --host http://example.com \
+  --csv urls.csv \
+  --output ./screenshots \
+  --log ./logs/app.log \
+  --html ./reports/result.html \
+  -c 10 \
+  --dingding-webhook https://oapi.dingtalk.com/robot/send?access_token=TOKEN
+```
+
+## CSV 文件格式
+
 ```csv
 url,name
 /products/123,产品页面1
@@ -111,68 +107,62 @@ https://example.com/about,关于页面
 /categories,分类页面
 ```
 
-**格式2（也支持）：**
-```csv
-PTN_NO,PRODUCT_ID,URL
-17108,1 Liter Stainless Steel Water Bottles,+1-liter-stainless-steel-water-bottles
-18200,100th birthday,+100th-birthday
+- **url**: 页面URL（可以是完整URL或相对路径）
+- **name**: 截图名称（可选）
+
+## 项目结构
+
+```
+cptool_cli/
+├── cptools/              # 主包
+│   ├── cli.py           # 命令行入口
+│   ├── commands/        # 命令模块
+│   └── utils/           # 工具模块
+├── docs/                # 📚 文档目录
+│   ├── getting-started/ # 快速入门
+│   ├── guides/          # 详细指南
+│   ├── reference/       # 参考文档
+│   └── development/     # 开发文档
+├── setup.py             # 安装配置
+├── requirements.txt     # 依赖列表
+└── README.md           # 本文件
 ```
 
-列说明：
-- **URL列**（必需）：支持 `url`、`URL` 等列名（不区分大小写）
-  - 完整URL：如 `https://example.com/about`
-  - 相对路径：如 `/products` 或 `+products`（会与 `--host` 组合）
-- **名称列**（可选）：支持 `name`、`PRODUCT_ID`、`title` 等列名
-  - 用于生成截图文件名
-  - 如果不提供，将自动生成为 `screenshot-1`, `screenshot-2` 等
+## 脚本工具
 
-#### 完整示例
+| 脚本 | 说明 |
+|------|------|
+| `./setup_venv.sh` | 自动安装脚本（Linux/Mac）|
+| `setup_venv.bat` | 自动安装脚本（Windows）|
+| `./test.sh` | 环境测试脚本 |
+| `./info.sh` | 显示项目信息 |
 
-```bash
-cptools screenshot \
-  --host http://www.cafepress.com \
-  --csv data.csv \
-  --output ./screenshots \
-  --log ./logs/app.log \
-  --html ./reports/result.html \
-  --concurrency 10 \
-  --dingding-webhook https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN
-```
-
-### 查看帮助
+## 获取帮助
 
 ```bash
+# 查看版本
+cptools --version
+
+# 查看帮助
 cptools --help
 cptools screenshot --help
+
+# 运行测试
+./test.sh
+
+# 查看项目信息
+./info.sh
 ```
 
 ## 开发
 
-### 项目结构
-
-```
-cptool_cli/
-├── cptools/
-│   ├── __init__.py
-│   ├── cli.py              # 主命令行入口
-│   ├── commands/
-│   │   ├── __init__.py
-│   │   └── screenshot.py   # 截屏命令实现
-│   └── utils/
-│       ├── __init__.py
-│       ├── logger.py       # 日志工具
-│       ├── html_report.py  # HTML报告生成
-│       └── dingding.py     # 钉钉通知
-├── setup.py
-├── requirements.txt
-└── README.md
-```
-
-### 贡献
-
-欢迎提交Issue和Pull Request！
+参见 [开发指南](docs/development/DEVELOPMENT.md)
 
 ## 许可证
 
 MIT License
+
+---
+
+**需要帮助？** 查看 [完整文档](docs/README.md) 或运行 `./info.sh`
 

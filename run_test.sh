@@ -86,7 +86,7 @@ cptools screenshot \
   --output "$OUTPUT_DIR" \
   --log "$LOG_FILE" \
   --html "$HTML_FILE" \
-  --concurrency "$CONCURRENCY" \
+  -c "$CONCURRENCY" \
   --timeout 30000
 
 EXIT_CODE=$?

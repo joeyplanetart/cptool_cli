@@ -21,7 +21,7 @@ cptools screenshot \
 cptools screenshot \
   --host http://www.example.com \
   --csv urls.csv \
-  --concurrency 20 \
+  -c 20 \
   --output ./batch_screenshots
 ```
 
@@ -95,7 +95,7 @@ cptools screenshot \
   --output ./production_screenshots \
   --log ./logs/production_$(date +%Y%m%d).log \
   --html ./reports/production_$(date +%Y%m%d).html \
-  --concurrency 15 \
+  -c 15 \
   --timeout 60000 \
   --width 1920 \
   --height 1080 \
@@ -123,7 +123,7 @@ cptools screenshot \
   --output "${OUTPUT_DIR}" \
   --log "${LOG_FILE}" \
   --html "${HTML_FILE}" \
-  --concurrency 10
+  -c 10
 
 # 检查结果
 if [ $? -eq 0 ]; then
@@ -168,7 +168,7 @@ def run_screenshot(host, csv_file, **kwargs):
     if kwargs.get('html'):
         cmd.extend(['--html', kwargs['html']])
     if kwargs.get('concurrency'):
-        cmd.extend(['--concurrency', str(kwargs['concurrency'])])
+        cmd.extend(['-c', str(kwargs['concurrency'])])
     if kwargs.get('dingding_webhook'):
         cmd.extend(['--dingding-webhook', kwargs['dingding_webhook']])
     

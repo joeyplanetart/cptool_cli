@@ -172,7 +172,7 @@ browser = await p.chromium.launch(headless=False)  # 改为False
 ### 3. 减少并发测试
 
 ```bash
-cptools screenshot ... --concurrency 1
+cptools screenshot ... -c 1
 ```
 
 ## 性能优化
@@ -183,10 +183,10 @@ cptools screenshot ... --concurrency 1
 
 ```bash
 # CPU密集型: 2-4个并发
-cptools screenshot ... --concurrency 3
+cptools screenshot ... -c 3
 
 # 网络密集型: 10-20个并发
-cptools screenshot ... --concurrency 15
+cptools screenshot ... -c 15
 ```
 
 ### 2. 优化超时设置

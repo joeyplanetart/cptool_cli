@@ -12,7 +12,7 @@ source venv/bin/activate     # Linux/Mac
 venv\Scripts\activate        # Windows
 
 # 3. 运行截图
-cptools screenshot -h http://example.com -c data.csv -l log.log --html result.html
+cptools screenshot -h http://example.com --csv data.csv -l log.log --html result.html
 ```
 
 ## 📋 常用命令
@@ -48,7 +48,7 @@ cptools screenshot \
   --output ./screenshots \
   --log ./log.log \
   --html ./result.html \
-  --concurrency 10 \
+  -c 10 \
   --timeout 30000 \
   --width 1920 \
   --height 1080 \
@@ -60,11 +60,11 @@ cptools screenshot \
 | 参数 | 短选项 | 必需 | 默认值 | 说明 |
 |------|--------|------|--------|------|
 | `--host` | `-h` | ✓ | - | 默认主机地址 |
-| `--csv` | `-c` | ✓ | - | CSV文件路径 |
+| `--csv` | | ✓ | - | CSV文件路径 |
 | `--output` | `-o` | ✗ | ./screenshots | 截图保存目录 |
 | `--log` | `-l` | ✗ | ./screenshot.log | 日志文件路径 |
 | `--html` | | ✗ | ./result.html | HTML报告路径 |
-| `--concurrency` | `-n` | ✗ | 5 | 并发数量 |
+| `--concurrency` | `-c` | ✗ | 5 | 并发数量 |
 | `--timeout` | | ✗ | 30000 | 超时时间（毫秒） |
 | `--width` | | ✗ | 1920 | 浏览器宽度 |
 | `--height` | | ✗ | 1080 | 浏览器高度 |
@@ -114,36 +114,35 @@ rm -rf venv
 
 ### 桌面端截图（默认）
 ```bash
-cptools screenshot -h http://example.com -c urls.csv
+cptools screenshot -h http://example.com --csv urls.csv
 ```
 
 ### 移动端截图
 ```bash
-cptools screenshot -h http://example.com -c urls.csv \
+cptools screenshot -h http://example.com --csv urls.csv \
   --width 375 --height 667
 ```
 
 ### 平板截图
 ```bash
-cptools screenshot -h http://example.com -c urls.csv \
+cptools screenshot -h http://example.com --csv urls.csv \
   --width 768 --height 1024
 ```
 
 ### 高并发快速截图
 ```bash
-cptools screenshot -h http://example.com -c urls.csv \
-  --concurrency 20
+cptools screenshot -h http://example.com --csv urls.csv -c 20
 ```
 
 ### 慢速网站截图
 ```bash
-cptools screenshot -h http://example.com -c urls.csv \
-  --timeout 60000 --concurrency 3
+cptools screenshot -h http://example.com --csv urls.csv \
+  --timeout 60000 -c 3
 ```
 
 ### 带钉钉通知
 ```bash
-cptools screenshot -h http://example.com -c urls.csv \
+cptools screenshot -h http://example.com --csv urls.csv \
   --dingding-webhook "https://oapi.dingtalk.com/robot/send?access_token=TOKEN"
 ```
 

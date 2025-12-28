@@ -131,7 +131,7 @@ cptools screenshot \
 cptools screenshot \
   --host http://example.com \
   --csv data.csv \
-  --concurrency 10
+  -c 10
 ```
 
 ### 启用钉钉通知
@@ -203,7 +203,7 @@ A: 检查：
 
 A: 可以增加并发数：
 ```bash
-cptools screenshot --concurrency 20 ...
+cptools screenshot -c 20 ...
 ```
 
 ### Q: CSV文件格式有什么要求？

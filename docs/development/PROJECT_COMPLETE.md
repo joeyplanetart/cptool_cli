@@ -125,7 +125,7 @@ cptools screenshot \
   --output ./screenshots \
   --log ./log.log \
   --html ./result.html \
-  --concurrency 5
+  -c 5
 ```
 
 ## 📤 上传到GitHub
@@ -214,7 +214,7 @@ cptools screenshot \
 cptools screenshot \
   --host http://www.example.com \
   --csv urls.csv \
-  --concurrency 20 \
+  -c 20 \
   --output ./batch_screenshots
 ```
 
@@ -283,19 +283,19 @@ Usage: cptools screenshot [OPTIONS]
 
   示例：
 
-  cptools screenshot -h http://www.cafepress.com -c data.csv -l log.log
+  cptools screenshot -h http://www.cafepress.com --csv data.csv -l log.log
   --html result.html
 
   cptools screenshot --host http://example.com --csv urls.csv --output ./imgs
-  --concurrency 10
+  -c 10
 
 Options:
   -h, --host TEXT              默认主机地址（当CSV中的URL没有域名时使用）  [required]
-  -c, --csv PATH               CSV文件路径，包含要截图的URL列表  [required]
+  --csv PATH                   CSV文件路径，包含要截图的URL列表  [required]
   -o, --output TEXT            截图保存目录（默认：./screenshots）
   -l, --log TEXT               日志文件路径（默认：./screenshot.log）
   --html TEXT                  HTML报告输出路径（默认：./result.html）
-  -n, --concurrency INTEGER    并发数量（默认：5）
+  -c, --concurrency INTEGER    并发数量（默认：5）
   --dingding-webhook TEXT      钉钉机器人Webhook URL（可选）
   --timeout INTEGER            页面加载超时时间（毫秒，默认：30000）
   --width INTEGER              浏览器窗口宽度（默认：1920）

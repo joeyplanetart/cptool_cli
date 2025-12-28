@@ -133,7 +133,7 @@ else
     echo "  --output ./test_screenshots \\"
     echo "  --log ./test.log \\"
     echo "  --html ./test_result.html \\"
-    echo "  --concurrency 3"
+    echo "  -c 3"
     echo ""
 fi
 

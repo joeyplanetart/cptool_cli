@@ -44,7 +44,7 @@ cptools screenshot \
   --output ./screenshots \
   --log ./test.log \
   --html ./result.html \
-  --concurrency 10
+  -c 10
 ```
 
 ## 📋 CSV格式说明

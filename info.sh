@@ -58,7 +58,7 @@ cat << 'EOF'
     --host http://example.com \\
     --csv data.csv \\
     --output ./screenshots \\
-    --concurrency 10 \\
+    -c 10 \\
     --width 1920 \\
     --height 1080 \\
     --dingding-webhook <URL>
@@ -66,14 +66,24 @@ cat << 'EOF'
 📚 文档说明
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  README.md          - 项目概述和基本说明
-  QUICKSTART.md      - 快速开始指南
-  CHEATSHEET.md      - 常用命令速查表（推荐！）
-  VENV_GUIDE.md      - 虚拟环境详细指南
-  EXAMPLES.md        - 丰富的使用示例
-  DEVELOPMENT.md     - 开发者文档
-  GITHUB_UPLOAD.md   - GitHub上传指南
-  PROJECT_COMPLETE.md - 项目完成说明
+  README.md                              - 项目概述和快速开始
+  docs/README.md                         - 📚 文档中心（推荐！）
+  
+  快速入门：
+    docs/getting-started/QUICKSTART.md   - 快速开始指南
+    docs/getting-started/EXAMPLES.md     - 丰富的使用示例
+  
+  详细指南：
+    docs/guides/VENV_GUIDE.md            - 虚拟环境详细指南
+    docs/guides/TEST_GUIDE.md            - 测试指南
+    docs/guides/GITHUB_UPLOAD.md         - GitHub上传指南
+  
+  参考文档：
+    docs/reference/CHEATSHEET.md         - 常用命令速查表
+  
+  开发文档：
+    docs/development/DEVELOPMENT.md      - 开发者文档
+    docs/development/PROJECT_COMPLETE.md - 项目完成说明
 
 🔧 脚本工具
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -124,7 +134,7 @@ cat << 'EOF'
   A: rm -rf venv && ./setup_venv.sh
 
   Q: 需要更多帮助？
-  A: 查看 CHEATSHEET.md（快速参考）或 VENV_GUIDE.md（详细指南）
+  A: 查看 docs/README.md（文档中心）或 docs/reference/CHEATSHEET.md（快速参考）
 
 📞 获取帮助
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -151,6 +161,7 @@ else
 fi
 
 echo ""
-echo "查看详细文档: cat CHEATSHEET.md"
+echo "查看文档中心: cat docs/README.md"
+echo "查看命令速查: cat docs/reference/CHEATSHEET.md"
 echo ""
 

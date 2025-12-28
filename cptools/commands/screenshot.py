@@ -16,11 +16,11 @@ from cptools.utils.dingding import send_dingding_notification
 
 @click.command()
 @click.option('--host', '-h', required=True, help='默认主机地址（当CSV中的URL没有域名时使用）')
-@click.option('--csv', '-c', 'csv_file', required=True, type=click.Path(exists=True), help='CSV文件路径，包含要截图的URL列表')
+@click.option('--csv', 'csv_file', required=True, type=click.Path(exists=True), help='CSV文件路径，包含要截图的URL列表')
 @click.option('--output', '-o', default='./screenshots', help='截图保存目录（默认：./screenshots）')
 @click.option('--log', '-l', default='./screenshot.log', help='日志文件路径（默认：./screenshot.log）')
 @click.option('--html', default='./result.html', help='HTML报告输出路径（默认：./result.html）')
-@click.option('--concurrency', '-n', default=5, type=int, help='并发数量（默认：5）')
+@click.option('--concurrency', '-c', default=5, type=int, help='并发数量（默认：5）')
 @click.option('--dingding-webhook', default='', help='钉钉机器人Webhook URL（可选）')
 @click.option('--timeout', default=30000, type=int, help='页面加载超时时间（毫秒，默认：30000）')
 @click.option('--width', default=1920, type=int, help='浏览器窗口宽度（默认：1920）')
@@ -37,10 +37,10 @@ def screenshot(host, csv_file, output, log, html, concurrency, dingding_webhook,
     示例：
     
     \b
-    cptools screenshot -h http://www.cafepress.com -c data.csv -l log.log --html result.html
+    cptools screenshot -h http://www.cafepress.com --csv data.csv -l log.log --html result.html
     
     \b
-    cptools screenshot --host http://example.com --csv urls.csv --output ./imgs --concurrency 10
+    cptools screenshot --host http://example.com --csv urls.csv --output ./imgs -c 10
     """
     # 设置日志
     logger = setup_logger(log)
