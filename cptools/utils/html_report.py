@@ -56,7 +56,11 @@ def generate_html_report(
 
 
 def _generate_results_html(results: List[Dict], output_path: str, template: str) -> str:
-    """生成结果HTML片段"""
+    """生成结果HTML片段
+    
+    注意：对于default模板，直接生成result-card，不包裹grid
+    JavaScript会动态创建分页结构
+    """
     results_html = ""
     
     for idx, result in enumerate(results, 1):
@@ -69,7 +73,8 @@ def _generate_results_html(results: List[Dict], output_path: str, template: str)
         # 转换为相对路径
         if screenshot_path and Path(screenshot_path).exists():
             try:
-                rel_path = Path(screenshot_path).relative_to(Path(output_path).parent)
+                output_dir = Path(output_path).parent
+                rel_path = Path(screenshot_path).relative_to(output_dir)
                 img_src = str(rel_path).replace('\\', '/')
             except ValueError:
                 img_src = screenshot_path
@@ -78,11 +83,14 @@ def _generate_results_html(results: List[Dict], output_path: str, template: str)
         
         # 根据模板生成不同的HTML结构
         if template == 'terminal':
-            results_html += _generate_terminal_result(status, name, url, img_src, error)
+            results_html += _generate_terminal_result(
+                status, name, url, img_src, error)
         elif template == 'minimal':
-            results_html += _generate_minimal_result(status, name, url, img_src, error)
+            results_html += _generate_minimal_result(
+                status, name, url, img_src, error)
         else:  # default
-            results_html += _generate_default_result(status, name, url, img_src, error)
+            results_html += _generate_default_result(
+                status, name, url, img_src, error)
     
     return results_html
 
