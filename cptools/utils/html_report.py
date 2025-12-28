@@ -424,17 +424,15 @@ def _generate_modern_html(
             background: rgba(0, 0, 0, 0.95);
             overflow: auto;
             animation: fadeIn 0.2s;
-            padding: 20px;
+            padding: 40px 20px;
             box-sizing: border-box;
         }}
         
         .modal-content {{
             display: block;
             margin: 0 auto;
-            max-width: 95%;
-            max-height: 90vh;
-            width: auto;
-            height: auto;
+            width: 1920px;
+            max-width: none;
             animation: zoomIn 0.3s;
             cursor: default;
         }}

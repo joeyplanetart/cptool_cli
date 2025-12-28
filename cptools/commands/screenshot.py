@@ -39,8 +39,13 @@ from cptools.utils.dingding import send_dingding_notification
 @click.option(
     '--dingding-webhook',
     default='https://oapi.dingtalk.com/robot/send?access_token='
-            'cc51fb8d186b18fd2ee82e24b0d5a810b11ba817de855b98fb3058f4c4e60767',
+            '1ca8024bc1c862b478d67bc957ea6a0a4e0b3e6f5cb610f189e128228cf7251a',
     help='钉钉机器人Webhook URL（默认已配置）')
+@click.option(
+    '--dingding-secret',
+    default='SECdaf4d24ecac8732c1f8d63ee8df611ee623921ba6b450935acf4816'
+            '6a69192e2',
+    help='钉钉机器人签名密钥（默认已配置）')
 @click.option(
     '--timeout', default=30000, type=int,
     help='页面加载超时时间（毫秒，默认：30000）')
@@ -55,7 +60,8 @@ from cptools.utils.dingding import send_dingding_notification
     type=click.Choice(['default', 'terminal', 'minimal']),
     help='HTML报告模板（默认：default）')
 def screenshot(host, csv_file, output, log, html, concurrency,
-               dingding_webhook, timeout, width, height, template):
+               dingding_webhook, dingding_secret, timeout, width, height,
+               template):
     """网页截屏工具
 
     从CSV文件读取URL列表并进行截图。CSV文件应包含以下列：
@@ -164,7 +170,7 @@ def screenshot(host, csv_file, output, log, html, concurrency,
         generate_html_report(results, html, title="截屏报告",
                              template=template)
         logger.info(f"HTML报告已生成: {html}")
-        
+
         # 自动在浏览器中打开报告
         try:
             html_abs_path = Path(html).absolute()
@@ -196,7 +202,8 @@ def screenshot(host, csv_file, output, log, html, concurrency,
                 send_dingding_notification(
                     dingding_webhook,
                     "截屏任务完成",
-                    notification_content
+                    notification_content,
+                    secret=dingding_secret
                 )
             )
         except Exception as e:
