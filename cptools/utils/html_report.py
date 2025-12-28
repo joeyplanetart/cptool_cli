@@ -1,4 +1,4 @@
-"""HTML报告生成模块"""
+"""HTML报告生成模块 - 简约大气版"""
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict
@@ -13,10 +13,10 @@ def generate_html_report(
     """生成HTML报告
     
     Args:
-        results: 截图结果列表，每项包含url, name, screenshot_path, status, error等字段
+        results: 截图结果列表
         output_path: 输出HTML文件路径
         title: 报告标题
-        template: 模板名称 (default, terminal, minimal)
+        template: 模板名称（已废弃，保留参数兼容性）
     """
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -27,41 +27,31 @@ def generate_html_report(
     failed = total - success
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    # 生成结果HTML
-    results_html = _generate_results_html(results, output_path, template)
-    
-    # 读取模板
-    template_path = Path(__file__).parent.parent / 'templates' / f'{template}.html'
-    
-    if not template_path.exists():
-        print(f"警告: 模板 '{template}' 不存在，使用默认模板")
-        template_path = Path(__file__).parent.parent / 'templates' / 'default.html'
-    
-    # 如果模板仍不存在，使用内置模板
-    if not template_path.exists():
-        html_content = _generate_fallback_html(results, output_path, title, total, success, failed, timestamp)
-    else:
-        # 读取模板并替换变量
-        template_content = template_path.read_text(encoding='utf-8')
-        html_content = template_content.replace('{{ title }}', title)
-        html_content = html_content.replace('{{ timestamp }}', timestamp)
-        html_content = html_content.replace('{{ total }}', str(total))
-        html_content = html_content.replace('{{ success }}', str(success))
-        html_content = html_content.replace('{{ failed }}', str(failed))
-        html_content = html_content.replace('{{ results_html }}', results_html)
+    # 生成HTML内容
+    html_content = _generate_modern_html(
+        results, output_path, title, total, success, failed, timestamp
+    )
     
     # 写入文件
     output_file.write_text(html_content, encoding='utf-8')
     print(f"HTML报告已生成: {output_path}")
 
 
-def _generate_results_html(results: List[Dict], output_path: str, template: str) -> str:
-    """生成结果HTML片段
+def _generate_modern_html(
+    results: List[Dict],
+    output_path: str,
+    title: str,
+    total: int,
+    success: int,
+    failed: int,
+    timestamp: str
+) -> str:
+    """生成现代简约风格的HTML"""
     
-    注意：对于default模板，直接生成result-card，不包裹grid
-    JavaScript会动态创建分页结构
-    """
-    results_html = ""
+    # 生成结果卡片
+    cards_html = ""
+    error_nav_html = ""
+    error_count = 0
     
     for idx, result in enumerate(results, 1):
         status = result.get('status', 'failed')
@@ -81,252 +71,555 @@ def _generate_results_html(results: List[Dict], output_path: str, template: str)
         else:
             img_src = ''
         
-        # 根据模板生成不同的HTML结构
-        if template == 'terminal':
-            results_html += _generate_terminal_result(
-                status, name, url, img_src, error)
-        elif template == 'minimal':
-            results_html += _generate_minimal_result(
-                status, name, url, img_src, error)
-        else:  # default
-            results_html += _generate_default_result(
-                status, name, url, img_src, error)
-    
-    return results_html
-
-
-def _generate_default_result(status: str, name: str, url: str, img_src: str, error: str) -> str:
-    """生成默认模板的结果项"""
-    html = f"""
-                <div class="result-card {status}">
-                    <div class="image-container">
-"""
-    
-    if status == 'success' and img_src:
-        html += f"""
-                        <img src="{img_src}" alt="{name}">
-"""
-    else:
-        html += """
-                        <div class="error-placeholder">❌</div>
-"""
-    
-    html += f"""
-                    </div>
-                    <div class="info">
-                        <div class="name" title="{name}">{name}</div>
-                        <div class="url" title="{url}">{url}</div>
-                        <span class="status {status}">{status}</span>
-"""
-    
-    if error:
-        html += f"""
-                        <div class="error">{error}</div>
-"""
-    
-    html += """
-                    </div>
+        # 生成卡片
+        cards_html += f'''
+            <div class="screenshot-card {'error' if status == 'failed' else ''}" id="item-{idx}">
+                <div class="card-image">'''
+        
+        if status == 'success' and img_src:
+            cards_html += f'''
+                    <img src="{img_src}" alt="{name}" onclick="openModal({idx - 1})" data-index="{idx - 1}">'''
+        else:
+            error_count += 1
+            cards_html += f'''
+                    <div class="error-icon">
+                        <svg viewBox="0 0 24 24" width="64" height="64">
+                            <path fill="currentColor" d="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16" />
+                        </svg>
+                        <p>截图失败</p>
+                    </div>'''
+        
+        cards_html += f'''
                 </div>
-"""
-    return html
-
-
-def _generate_terminal_result(status: str, name: str, url: str, img_src: str, error: str) -> str:
-    """生成终端模板的结果项"""
-    html = f"""
-                <div class="result-item {status}">
-                    <div class="thumbnail">
-"""
-    
-    if status == 'success' and img_src:
-        html += f"""
-                        <img src="{img_src}" alt="{name}">
-"""
-    else:
-        html += """
-                        <div class="error-icon">✗</div>
-"""
-    
-    html += f"""
-                    </div>
-                    <div class="info">
-                        <div class="name">{name}</div>
-                        <div class="url">{url}</div>
-"""
-    
-    if error:
-        html += f"""
-                        <div class="error">> ERROR: {error}</div>
-"""
-    
-    html += f"""
-                    </div>
-                    <div class="status {status}">{status}</div>
+                <div class="card-info">
+                    <h3 class="card-title" title="{name}">{name}</h3>
+                    <a href="{url}" class="card-url" target="_blank" title="{url}">{url}</a>
+                    <div class="card-status {'success' if status == 'success' else 'error'}">
+                        {'✓ 成功' if status == 'success' else '✗ 失败'}
+                    </div>'''
+        
+        if error:
+            cards_html += f'''
+                    <details class="error-details">
+                        <summary>错误详情</summary>
+                        <pre>{error}</pre>
+                    </details>'''
+        
+        cards_html += '''
                 </div>
-"""
-    return html
-
-
-def _generate_minimal_result(status: str, name: str, url: str, img_src: str, error: str) -> str:
-    """生成简约模板的结果项"""
-    return _generate_default_result(status, name, url, img_src, error)
-
-
-def _generate_fallback_html(results: List[Dict], output_path: str, title: str, 
-                            total: int, success: int, failed: int, timestamp: str) -> str:
-    """生成后备HTML（当模板文件不存在时）"""
-    results_html = _generate_results_html(results, output_path, 'default')
+            </div>'''
+        
+        # 错误导航
+        if status == 'failed':
+            error_nav_html += f'''
+                <a href="#item-{idx}" class="error-link">
+                    <span class="error-num">{error_count}</span>
+                    <span class="error-name">{name}</span>
+                </a>'''
     
-    return f"""<!DOCTYPE html>
+    # 生成完整HTML
+    return f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+        :root {{
+            --primary: #2563eb;
+            --success: #10b981;
+            --error: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }}
+        
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
         }}
-        .container {{
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }}
+        
         .header {{
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 40px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }}
+        
+        .container {{
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }}
+        
+        .header-content {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }}
+        
+        .title {{
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }}
+        
+        .timestamp {{
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }}
+        
+        .stats {{
+            display: flex;
+            gap: 2rem;
+        }}
+        
+        .stat {{
             text-align: center;
         }}
-        .header h1 {{ font-size: 36px; margin-bottom: 10px; font-weight: 700; }}
-        .header p {{ font-size: 16px; opacity: 0.9; }}
-        .summary {{
+        
+        .stat-value {{
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+        }}
+        
+        .stat-label {{
+            font-size: 0.875rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+        
+        .error-nav {{
+            background: var(--card-bg);
+            margin: 1.5rem auto;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }}
+        
+        .error-nav-title {{
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--error);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }}
+        
+        .error-links {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 40px;
-            background: #f8f9fa;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
         }}
-        .summary-card {{
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        
+        .error-link {{
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
         }}
-        .summary-card .number {{ font-size: 48px; font-weight: bold; margin-bottom: 10px; }}
-        .summary-card .label {{ color: #6c757d; font-size: 14px; }}
-        .summary-card.total .number {{ color: #667eea; }}
-        .summary-card.success .number {{ color: #28a745; }}
-        .summary-card.failed .number {{ color: #dc3545; }}
-        .results {{ padding: 40px; }}
-        .results h2 {{ font-size: 28px; margin-bottom: 30px; color: #333; }}
-        .result-grid {{
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
+        
+        .error-link:hover {{
+            background: #fee2e2;
+            transform: translateX(4px);
         }}
-        .result-card {{
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 2px solid transparent;
-        }}
-        .result-card.success {{ border-color: #28a745; }}
-        .result-card.failed {{ border-color: #dc3545; }}
-        .result-card .image-container {{
-            width: 100%;
-            height: 250px;
-            background: #f8f9fa;
+        
+        .error-num {{
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-        }}
-        .result-card img {{ width: 100%; height: 100%; object-fit: cover; }}
-        .result-card .error-placeholder {{ color: #dc3545; font-size: 48px; }}
-        .result-card .info {{ padding: 20px; }}
-        .result-card .name {{
-            font-size: 18px;
+            width: 2rem;
+            height: 2rem;
+            background: var(--error);
+            color: white;
+            border-radius: 50%;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }}
+        
+        .error-name {{
+            flex: 1;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }}
-        .result-card .url {{
-            font-size: 14px;
-            color: #6c757d;
-            margin-bottom: 12px;
+        
+        .content {{
+            padding: 2rem 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }}
+        
+        .grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }}
+        
+        .screenshot-card {{
+            background: var(--card-bg);
+            border-radius: 0.75rem;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 2px solid transparent;
         }}
-        .result-card .status {{
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+        
+        .screenshot-card:hover {{
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
         }}
-        .result-card .status.success {{ background: #d4edda; color: #155724; }}
-        .result-card .status.failed {{ background: #f8d7da; color: #721c24; }}
-        .result-card .error {{
-            margin-top: 12px;
-            padding: 12px;
-            background: #f8d7da;
-            border-left: 4px solid #dc3545;
-            font-size: 13px;
-            color: #721c24;
+        
+        .screenshot-card.error {{
+            border-color: var(--error);
         }}
-        .footer {{
-            background: #f8f9fa;
-            padding: 30px;
+        
+        .card-image {{
+            position: relative;
+            width: 100%;
+            padding-bottom: 75%;
+            background: #f1f5f9;
+            overflow: hidden;
+        }}
+        
+        .card-image img {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s, opacity 0.3s;
+        }}
+        
+        .card-image:hover img {{
+            transform: scale(1.05);
+            opacity: 0.85;
+        }}
+        
+        .error-icon {{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            color: #6c757d;
-            font-size: 14px;
+            color: var(--error);
+        }}
+        
+        .error-icon p {{
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }}
+        
+        .card-info {{
+            padding: 1.25rem;
+        }}
+        
+        .card-title {{
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }}
+        
+        .card-url {{
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }}
+        
+        .card-url:hover {{
+            color: var(--primary);
+            text-decoration: underline;
+        }}
+        
+        .card-status {{
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+        
+        .card-status.success {{
+            background: #d1fae5;
+            color: #065f46;
+        }}
+        
+        .card-status.error {{
+            background: #fee2e2;
+            color: #991b1b;
+        }}
+        
+        .error-details {{
+            margin-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            padding-top: 0.75rem;
+        }}
+        
+        .error-details summary {{
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: var(--error);
+            font-weight: 500;
+            user-select: none;
+        }}
+        
+        .error-details pre {{
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: #fef2f2;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            color: #7f1d1d;
+            overflow-x: auto;
+            line-height: 1.5;
+        }}
+        
+        .modal {{
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            overflow: auto;
+            animation: fadeIn 0.2s;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }}
+        
+        .modal-content {{
+            display: block;
+            margin: 0 auto;
+            width: 2560px;
+            animation: zoomIn 0.3s;
+            cursor: default;
+        }}
+        
+        .modal-close {{
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            color: white;
+            font-size: 3rem;
+            font-weight: 300;
+            cursor: pointer;
+            z-index: 1001;
+            transition: opacity 0.2s;
+        }}
+        
+        .modal-close:hover {{
+            opacity: 0.7;
+        }}
+        
+        @keyframes fadeIn {{
+            from {{ opacity: 0; }}
+            to {{ opacity: 1; }}
+        }}
+        
+        @keyframes zoomIn {{
+            from {{ transform: translate(-50%, -50%) scale(0.8); }}
+            to {{ transform: translate(-50%, -50%) scale(1); }}
+        }}
+        
+        @media (max-width: 768px) {{
+            .header-content {{
+                flex-direction: column;
+                align-items: flex-start;
+            }}
+            
+            .stats {{
+                width: 100%;
+                justify-content: space-around;
+            }}
+            
+            .grid {{
+                grid-template-columns: 1fr;
+            }}
         }}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📸 {title}</h1>
-            <p>生成时间: {timestamp}</p>
-        </div>
-        <div class="summary">
-            <div class="summary-card total">
-                <div class="number">{total}</div>
-                <div class="label">总数</div>
-            </div>
-            <div class="summary-card success">
-                <div class="number">{success}</div>
-                <div class="label">成功</div>
-            </div>
-            <div class="summary-card failed">
-                <div class="number">{failed}</div>
-                <div class="label">失败</div>
-            </div>
-        </div>
-        <div class="results">
-            <h2>详细结果</h2>
-            <div class="result-grid">
-                {results_html}
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1 class="title">📸 {title}</h1>
+                    <p class="timestamp">生成时间: {timestamp}</p>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-value">{total}</span>
+                        <span class="stat-label">总数</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{success}</span>
+                        <span class="stat-label">成功</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{failed}</span>
+                        <span class="stat-label">失败</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="footer">
-            <p>Powered by CPTools</p>
+    </header>
+    
+    {_generate_error_nav(error_nav_html, failed)}
+    
+    <main class="content">
+        <div class="grid">
+            {cards_html}
         </div>
+    </main>
+    
+    <div id="imageModal" class="modal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage" onclick="event.stopPropagation()">
     </div>
+    
+    <script>
+        let allImages = [];
+        let currentImageIndex = 0;
+        
+        // 初始化图片列表
+        document.addEventListener('DOMContentLoaded', () => {{
+            allImages = Array.from(document.querySelectorAll('.card-image img[data-index]'))
+                .map(img => ({{
+                    src: img.src,
+                    alt: img.alt,
+                    index: parseInt(img.getAttribute('data-index'))
+                }}));
+        }});
+        
+        function openModal(index) {{
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            currentImageIndex = index;
+            modal.style.display = 'block';
+            modalImg.src = allImages[currentImageIndex].src;
+            modalImg.alt = allImages[currentImageIndex].alt;
+            event.stopPropagation();
+        }}
+        
+        function closeModal() {{
+            document.getElementById('imageModal').style.display = 'none';
+        }}
+        
+        function showPrevImage() {{
+            if (allImages.length === 0) return;
+            currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
+            const modalImg = document.getElementById('modalImage');
+            modalImg.src = allImages[currentImageIndex].src;
+            modalImg.alt = allImages[currentImageIndex].alt;
+        }}
+        
+        function showNextImage() {{
+            if (allImages.length === 0) return;
+            currentImageIndex = (currentImageIndex + 1) % allImages.length;
+            const modalImg = document.getElementById('modalImage');
+            modalImg.src = allImages[currentImageIndex].src;
+            modalImg.alt = allImages[currentImageIndex].alt;
+        }}
+        
+        document.addEventListener('keydown', (e) => {{
+            const modal = document.getElementById('imageModal');
+            if (modal.style.display === 'block') {{
+                if (e.key === 'Escape') {{
+                    closeModal();
+                }} else if (e.key === 'ArrowLeft') {{
+                    showPrevImage();
+                }} else if (e.key === 'ArrowRight') {{
+                    showNextImage();
+                }}
+            }}
+        }});
+        
+        // 点击模态框背景关闭
+        document.getElementById('imageModal').addEventListener('click', (e) => {{
+            if (e.target.id === 'imageModal') {{
+                closeModal();
+            }}
+        }});
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {{
+            anchor.addEventListener('click', function (e) {{
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {{
+                    target.scrollIntoView({{
+                        behavior: 'smooth',
+                        block: 'center'
+                    }});
+                    target.style.animation = 'highlight 1s';
+                    setTimeout(() => target.style.animation = '', 1000);
+                }}
+            }});
+        }});
+        
+        const style = document.createElement('style');
+        style.textContent = '@keyframes highlight {{ 0%, 100% {{ transform: scale(1); }} 50% {{ transform: scale(1.02); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3); }} }}';
+        document.head.appendChild(style);
+    </script>
 </body>
-</html>
-"""
+</html>'''
+
+
+def _generate_error_nav(error_nav_html: str, failed: int) -> str:
+    """生成错误导航区域"""
+    if not error_nav_html or failed == 0:
+        return ''
+    
+    return f'''
+    <nav class="error-nav container">
+        <h2 class="error-nav-title">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16" />
+            </svg>
+            失败记录 ({failed} 个) - 点击快速定位
+        </h2>
+        <div class="error-links">
+            {error_nav_html}
+        </div>
+    </nav>'''

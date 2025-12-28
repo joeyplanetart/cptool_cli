@@ -4,6 +4,7 @@ import asyncio
 import csv
 import random
 import shutil
+import webbrowser
 from pathlib import Path
 from urllib.parse import urlparse, urljoin
 from datetime import datetime
@@ -162,7 +163,15 @@ def screenshot(host, csv_file, output, log, html, concurrency,
     try:
         generate_html_report(results, html, title="截屏报告",
                              template=template)
-        logger.info(f"HTML报告已生成: {html} (模板: {template})")
+        logger.info(f"HTML报告已生成: {html}")
+        
+        # 自动在浏览器中打开报告
+        try:
+            html_abs_path = Path(html).absolute()
+            webbrowser.open(f'file://{html_abs_path}')
+            logger.info("已在浏览器中打开报告")
+        except Exception as e:
+            logger.warning(f"自动打开浏览器失败: {str(e)}")
     except Exception as e:
         logger.error(f"生成HTML报告失败: {str(e)}")
 
