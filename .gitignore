@@ -45,6 +45,8 @@ test_reports/
 
 # Logs
 *.log
+logs/
+log/
 test_logs/
 
 # OS

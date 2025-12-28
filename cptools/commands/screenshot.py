@@ -19,7 +19,7 @@ from cptools.utils.dingding import send_dingding_notification
 @click.option('--host', '-h', required=True, help='默认主机地址（当CSV中的URL没有域名时使用）')
 @click.option('--csv', 'csv_file', required=True, type=click.Path(exists=True), help='CSV文件路径，包含要截图的URL列表')
 @click.option('--output', '-o', default='./screenshots', help='截图保存目录（默认：./screenshots）')
-@click.option('--log', '-l', default='./screenshot.log', help='日志文件路径（默认：./screenshot.log）')
+@click.option('--log', '-l', default='', help='日志文件路径（默认：./logs/YYYYMMDD_HHMMSS.log）')
 @click.option('--html', default='./result.html', help='HTML报告输出路径（默认：./result.html）')
 @click.option('--concurrency', '-c', default=5, type=int, help='并发数量（默认：5）')
 @click.option('--dingding-webhook', default='', help='钉钉机器人Webhook URL（可选）')
@@ -44,6 +44,13 @@ def screenshot(host, csv_file, output, log, html, concurrency, dingding_webhook,
     \b
     cptools screenshot --host http://example.com --csv urls.csv --output ./imgs -c 10
     """
+    # 如果没有指定日志文件，自动生成基于时间戳的文件名
+    if not log:
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        log = f'./logs/{timestamp}.log'
+        # 确保 logs 目录存在
+        Path('./logs').mkdir(parents=True, exist_ok=True)
+    
     # 设置日志
     logger = setup_logger(log)
     
