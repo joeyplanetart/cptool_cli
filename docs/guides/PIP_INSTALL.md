@@ -19,7 +19,7 @@
 
 ### 前提条件
 - 项目已上传到 GitHub
-- 仓库地址：`https://github.com/你的用户名/cptool_cli`
+- 仓库地址：`https://github.com/joeyplanetart/cptool_cli`
 
 ### 安装步骤
 
@@ -27,13 +27,13 @@
 
 ```bash
 # 方法 A: 直接从 GitHub 安装
-pip install git+https://github.com/你的用户名/cptool_cli.git
+pip install git+https://github.com/joeyplanetart/cptool_cli.git
 
 # 方法 B: 安装特定分支
-pip install git+https://github.com/你的用户名/cptool_cli.git@main
+pip install git+https://github.com/joeyplanetart/cptool_cli.git@main
 
 # 方法 C: 安装特定版本（tag）
-pip install git+https://github.com/你的用户名/cptool_cli.git@v1.0.0
+pip install git+https://github.com/joeyplanetart/cptool_cli.git@v1.0.0
 
 # 安装后安装 Playwright 浏览器
 playwright install chromium
@@ -51,7 +51,7 @@ cptools --version
 echo "开始安装 CPTools..."
 
 # 安装包
-pip install git+https://github.com/你的用户名/cptool_cli.git
+pip install git+https://github.com/joeyplanetart/cptool_cli.git
 
 # 安装 Playwright 浏览器
 playwright install chromium
@@ -169,7 +169,7 @@ setup(
     author="Joey Zhou",
     author_email="Joeyz@planetart.com",
     description="命令行工具集，包含截屏等功能",
-    url="https://github.com/你的用户名/cptool_cli",
+    url="https://github.com/joeyplanetart/cptool_cli",
     # ...
 )
 ```
@@ -275,7 +275,7 @@ pip install --index-url http://服务器IP:8080/simple/ cptools
 
 \`\`\`bash
 # 1. 安装 CPTools
-pip install git+https://github.com/你的用户名/cptool_cli.git
+pip install git+https://github.com/joeyplanetart/cptool_cli.git
 
 # 2. 安装 Playwright 浏览器
 playwright install chromium
@@ -299,7 +299,7 @@ cptools screenshot --help
 
 ## 需要帮助？
 
-查看完整文档：https://github.com/你的用户名/cptool_cli
+查看完整文档：https://github.com/joeyplanetart/cptool_cli
 ```
 
 ---
@@ -322,7 +322,7 @@ pip uninstall cptools
 
 ```bash
 # 临时使用
-pip install -i https://pypi.tuna.tsinghua.edu.cn/simple git+https://github.com/你的用户名/cptool_cli.git
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple git+https://github.com/joeyplanetart/cptool_cli.git
 
 # 永久配置
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
@@ -333,7 +333,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 **A: 使用 --user 参数**
 
 ```bash
-pip install --user git+https://github.com/你的用户名/cptool_cli.git
+pip install --user git+https://github.com/joeyplanetart/cptool_cli.git
 ```
 
 ### Q: 需要升级版本？
@@ -341,7 +341,7 @@ pip install --user git+https://github.com/你的用户名/cptool_cli.git
 **A: 使用 --upgrade 参数**
 
 ```bash
-pip install --upgrade git+https://github.com/你的用户名/cptool_cli.git
+pip install --upgrade git+https://github.com/joeyplanetart/cptool_cli.git
 ```
 
 ### Q: 想指定安装位置？
@@ -349,7 +349,7 @@ pip install --upgrade git+https://github.com/你的用户名/cptool_cli.git
 **A: 使用 --target 参数**
 
 ```bash
-pip install --target=/path/to/directory git+https://github.com/你的用户名/cptool_cli.git
+pip install --target=/path/to/directory git+https://github.com/joeyplanetart/cptool_cli.git
 ```
 
 ---

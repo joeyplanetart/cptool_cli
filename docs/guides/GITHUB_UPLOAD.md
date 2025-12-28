@@ -17,7 +17,7 @@
 在项目目录执行以下命令：
 
 ```bash
-# 关联远程仓库（替换 yourusername 为你的GitHub用户名）
+# 关联远程仓库（替换 joeyplanetart 为你的GitHub用户名）
 git remote add origin https://github.com/yourusername/cptool_cli.git
 
 # 重命名分支为 main（如果需要）
@@ -123,8 +123,8 @@ A: 修改以下文件：
 2. `setup.py` - 更新 `url` 字段
 
 ```bash
-# 批量替换（替换 yourusername 为你的用户名）
-sed -i '' 's/yourusername/你的GitHub用户名/g' README.md setup.py
+# 批量替换（如果需要更改用户名）
+sed -i '' 's/joeyplanetart/你的GitHub用户名/g' README.md setup.py
 
 # 提交修改
 git add README.md setup.py

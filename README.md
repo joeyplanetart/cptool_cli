@@ -15,7 +15,7 @@
 ### 方式1: 从 GitHub 安装（推荐）
 
 ```bash
-pip install git+https://github.com/yourusername/cptool_cli.git
+pip install git+https://github.com/joeyplanetart/cptool_cli.git
 playwright install chromium
 cptools --version
 ```
@@ -38,14 +38,14 @@ install_from_github.bat
 
 **Linux/Mac:**
 ```bash
-git clone https://github.com/yourusername/cptool_cli.git
+git clone https://github.com/joeyplanetart/cptool_cli.git
 cd cptool_cli
 ./setup_venv.sh
 ```
 
 **Windows:**
 ```bash
-git clone https://github.com/yourusername/cptool_cli.git
+git clone https://github.com/joeyplanetart/cptool_cli.git
 cd cptool_cli
 setup_venv.bat
 ```

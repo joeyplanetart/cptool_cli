@@ -56,7 +56,7 @@ echo 4️⃣  安装 CPTools...
 echo ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 REM 这里需要替换为你的 GitHub 仓库地址
-set GITHUB_URL=https://github.com/你的用户名/cptool_cli.git
+set GITHUB_URL=https://github.com/joeyplanetart/cptool_cli.git
 
 pip install %PIP_INDEX% git+%GITHUB_URL%
 if %errorlevel% neq 0 (
@@ -110,7 +110,7 @@ echo   # 运行截图
 echo   cptools screenshot --host http://example.com --csv data.csv
 echo.
 echo 📖 查看文档：
-echo   https://github.com/你的用户名/cptool_cli
+echo   https://github.com/joeyplanetart/cptool_cli
 echo.
 
 pause

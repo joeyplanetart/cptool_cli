@@ -141,7 +141,7 @@ cat << 'EOF'
 
   运行测试: ./test.sh
   查看文档: less CHEATSHEET.md
-  GitHub: https://github.com/yourusername/cptool_cli
+  GitHub: https://github.com/joeyplanetart/cptool_cli
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

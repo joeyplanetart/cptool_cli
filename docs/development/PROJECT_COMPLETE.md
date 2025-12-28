@@ -134,9 +134,9 @@ cptools screenshot \
 
 ```bash
 # 1. 在GitHub上创建新仓库（不要初始化README）
-# 2. 执行以下命令（替换为你的用户名）
+# 2. 执行以下命令（替换为joeyplanetart）
 
-git remote add origin https://github.com/你的用户名/cptool_cli.git
+git remote add origin https://github.com/joeyplanetart/cptool_cli.git
 git branch -M main
 git push -u origin main
 ```

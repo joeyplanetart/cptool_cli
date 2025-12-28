@@ -124,7 +124,7 @@ cptools screenshot \
 
 ## 🔗 外部资源
 
-- **GitHub 仓库**: https://github.com/yourusername/cptool_cli
+- **GitHub 仓库**: https://github.com/joeyplanetart/cptool_cli
 - **Playwright 文档**: https://playwright.dev/python/
 - **Python venv 文档**: https://docs.python.org/3/library/venv.html
 

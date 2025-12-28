@@ -5,7 +5,7 @@
 ### 从 GitHub 安装
 
 ```bash
-pip install git+https://github.com/你的用户名/cptool_cli.git
+pip install git+https://github.com/joeyplanetart/cptool_cli.git
 playwright install chromium
 cptools --version
 ```
@@ -25,7 +25,7 @@ python --version  # 需要 Python 3.8+
 ### 2. 安装 CPTools
 
 ```bash
-pip install git+https://github.com/你的用户名/cptool_cli.git
+pip install git+https://github.com/joeyplanetart/cptool_cli.git
 ```
 
 ### 3. 安装浏览器驱动
@@ -70,7 +70,7 @@ cptools screenshot \
 ## 🔄 更新版本
 
 ```bash
-pip install --upgrade git+https://github.com/你的用户名/cptool_cli.git
+pip install --upgrade git+https://github.com/joeyplanetart/cptool_cli.git
 ```
 
 ---
@@ -91,7 +91,7 @@ pip uninstall cptools
 
 ```bash
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple \
-  git+https://github.com/你的用户名/cptool_cli.git
+  git+https://github.com/joeyplanetart/cptool_cli.git
 ```
 
 ### 问题2: 权限错误
@@ -99,7 +99,7 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple \
 使用 `--user` 参数：
 
 ```bash
-pip install --user git+https://github.com/你的用户名/cptool_cli.git
+pip install --user git+https://github.com/joeyplanetart/cptool_cli.git
 ```
 
 ### 问题3: cptools 命令找不到
@@ -116,7 +116,7 @@ python -m cptools --help
 
 - 详细安装指南: [docs/guides/PIP_INSTALL.md](guides/PIP_INSTALL.md)
 - 使用文档: [docs/README.md](README.md)
-- GitHub: https://github.com/你的用户名/cptool_cli
+- GitHub: https://github.com/joeyplanetart/cptool_cli
 
 ---
 

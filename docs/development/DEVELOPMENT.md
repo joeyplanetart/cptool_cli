@@ -286,7 +286,7 @@ twine upload dist/*
 
 如有问题或建议，请通过以下方式联系：
 
-- 提交Issue: https://github.com/yourusername/cptool_cli/issues
+- 提交Issue: https://github.com/joeyplanetart/cptool_cli/issues
 - Email: your.email@example.com
 
 ## 许可证
