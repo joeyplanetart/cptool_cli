@@ -145,25 +145,56 @@ def screenshot(host, csv_file, output, log, html, concurrency, dingding_webhook,
 
 
 def read_csv_urls(csv_file: str, logger) -> List[Dict]:
-    """读取CSV文件中的URL列表"""
+    """读取CSV文件中的URL列表
+    
+    支持的列名（不区分大小写）：
+    - url/URL: URL地址（必需）
+    - name/PRODUCT_ID: 截图名称（可选）
+    """
     urls = []
     
     try:
         with open(csv_file, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             
-            # 检查必需的列
-            if 'url' not in reader.fieldnames:
-                logger.error("CSV文件必须包含'url'列")
+            if not reader.fieldnames:
+                logger.error("CSV文件为空或格式错误")
                 return []
             
+            # 创建列名映射（不区分大小写）
+            fieldnames_lower = {name.lower(): name for name in reader.fieldnames}
+            
+            # 查找URL列
+            url_column = None
+            for possible_name in ['url', 'URL']:
+                if possible_name.lower() in fieldnames_lower:
+                    url_column = fieldnames_lower[possible_name.lower()]
+                    break
+            
+            if not url_column:
+                logger.error(f"CSV文件必须包含'url'或'URL'列，当前列: {', '.join(reader.fieldnames)}")
+                return []
+            
+            # 查找名称列（优先级：name > PRODUCT_ID）
+            name_column = None
+            for possible_name in ['name', 'PRODUCT_ID', 'product_id', 'title', 'TITLE']:
+                if possible_name.lower() in fieldnames_lower:
+                    name_column = fieldnames_lower[possible_name.lower()]
+                    break
+            
+            logger.info(f"使用列: URL='{url_column}', NAME='{name_column or '(自动生成)'}'")
+            
             for idx, row in enumerate(reader, 1):
-                url = row.get('url', '').strip()
+                url = row.get(url_column, '').strip()
                 if not url:
                     logger.warning(f"第{idx}行: URL为空，跳过")
                     continue
                 
-                name = row.get('name', '').strip() or f'screenshot-{idx}'
+                # 获取名称
+                if name_column:
+                    name = row.get(name_column, '').strip() or f'screenshot-{idx}'
+                else:
+                    name = f'screenshot-{idx}'
                 
                 urls.append({
                     'url': url,

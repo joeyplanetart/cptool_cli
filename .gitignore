@@ -35,14 +35,17 @@ env*/
 *.swo
 *~
 
-# Logs
-*.log
-
 # Screenshots
 screenshots/
+test_screenshots*/
 
 # Reports
 *.html
+test_reports/
+
+# Logs
+*.log
+test_logs/
 
 # OS
 .DS_Store

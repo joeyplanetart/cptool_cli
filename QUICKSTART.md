@@ -76,6 +76,7 @@ venv\Scripts\activate
 
 创建一个CSV文件（例如 `data.csv`），包含要截图的URL：
 
+**格式1（简单）：**
 ```csv
 url,name
 /products/123,产品页面1
@@ -83,6 +84,19 @@ url,name
 https://www.example.com/about,关于页面
 /contact,联系我们
 ```
+
+**格式2（带编号）：**
+```csv
+PTN_NO,PRODUCT_ID,URL
+17108,水瓶产品,+1-liter-stainless-steel-water-bottles
+18200,生日主题,+100th-birthday
+```
+
+**重要说明：**
+- URL列必需（支持 `url`、`URL` 等，不区分大小写）
+- 名称列可选（支持 `name`、`PRODUCT_ID`、`title` 等）
+- URL可以是完整地址或相对路径
+- 以 `+` 或 `/` 开头的URL会与 `--host` 参数组合
 
 ### 2. 执行截图
 

@@ -103,6 +103,7 @@ cptools screenshot --host http://www.cafepress.com --csv data.csv --log log.log 
 
 CSV文件应包含以下列：
 
+**格式1（推荐）：**
 ```csv
 url,name
 /products/123,产品页面1
@@ -110,8 +111,20 @@ https://example.com/about,关于页面
 /categories,分类页面
 ```
 
-- `url`: 页面URL（可以是完整URL或相对路径）
-- `name`: 截图名称（可选，用于标识）
+**格式2（也支持）：**
+```csv
+PTN_NO,PRODUCT_ID,URL
+17108,1 Liter Stainless Steel Water Bottles,+1-liter-stainless-steel-water-bottles
+18200,100th birthday,+100th-birthday
+```
+
+列说明：
+- **URL列**（必需）：支持 `url`、`URL` 等列名（不区分大小写）
+  - 完整URL：如 `https://example.com/about`
+  - 相对路径：如 `/products` 或 `+products`（会与 `--host` 组合）
+- **名称列**（可选）：支持 `name`、`PRODUCT_ID`、`title` 等列名
+  - 用于生成截图文件名
+  - 如果不提供，将自动生成为 `screenshot-1`, `screenshot-2` 等
 
 #### 完整示例
 
