@@ -35,8 +35,10 @@ from cptools.utils.dingding import send_dingding_notification
     '--concurrency', '-c', default=5, type=int,
     help='并发数量（默认：5）')
 @click.option(
-    '--dingding-webhook', default='',
-    help='钉钉机器人Webhook URL（可选）')
+    '--dingding-webhook',
+    default='https://oapi.dingtalk.com/robot/send?access_token='
+            'cc51fb8d186b18fd2ee82e24b0d5a810b11ba817de855b98fb3058f4c4e60767',
+    help='钉钉机器人Webhook URL（默认已配置）')
 @click.option(
     '--timeout', default=30000, type=int,
     help='页面加载超时时间（毫秒，默认：30000）')
