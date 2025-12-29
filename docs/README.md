@@ -8,10 +8,15 @@
 
 新用户从这里开始：
 
-- **[快速开始指南](getting-started/QUICKSTART.md)** - 5分钟快速上手
+- **[快速开始指南](getting-started/QUICKSTART.md)** - 5分钟快速上手截屏功能
   - 一键安装脚本
   - 基本使用方法
   - 常见问题解答
+
+- **[URL404 快速开始](getting-started/URL404_QUICKSTART.md)** - 5分钟快速上手 URL 检测
+  - URL 检测基础
+  - 使用示例
+  - 报告解读
 
 - **[使用示例](getting-started/EXAMPLES.md)** - 丰富的实战示例
   - 基本截图示例
@@ -24,13 +29,25 @@
 
 深入了解各项功能：
 
+- **[安装指南](guides/INSTALL.md)** - 完整的安装说明
+  - 各平台安装方法
+  - 依赖说明
+  - 故障排除
+
+- **[URL404 使用指南](guides/URL404.md)** - URL 404检测完整教程
+  - 功能概述
+  - 命令参数
+  - 使用示例
+  - HTML 报告详解
+  - 常见问题
+
 - **[虚拟环境指南](guides/VENV_GUIDE.md)** - 虚拟环境完整教程
   - 什么是虚拟环境
   - 创建和管理
   - 故障排除
   - 最佳实践
 
-- **[测试指南](guides/TEST_GUIDE.md)** - 如何测试你的截图任务
+- **[测试指南](guides/TEST_GUIDE.md)** - 如何测试你的任务
   - 测试脚本使用
   - 配置建议
   - 问题诊断
@@ -84,10 +101,22 @@
   - 架构设计
   - 技术选型
 
+- **[URL404 开发总结](development/URL404_SUMMARY.md)** - URL404 功能开发文档
+  - 功能实现细节
+  - 技术要点
+  - 设计思路
+
+### 📄 其他文档
+
+- **[文档地图](DOCUMENTATION_MAP.md)** - 完整的文档结构索引
+
 ## 🎯 根据你的需求选择
 
 ### 我是新用户，想快速开始
 👉 从 [快速开始指南](getting-started/QUICKSTART.md) 开始
+
+### 我想检测 URL 状态码
+👉 查看 [URL404 快速开始](getting-started/URL404_QUICKSTART.md)
 
 ### 我想看实际的使用案例
 👉 查看 [使用示例](getting-started/EXAMPLES.md)
@@ -113,16 +142,16 @@ cptools --version
 # 查看帮助
 cptools --help
 cptools screenshot --help
+cptools url404 --help
 
-# 基本截图
+# 截屏
 cptools screenshot \
   --host http://example.com \
   --csv data.csv \
-  --log log.log \
-  --html result.html
+  -c 10
 
-# 高并发截图
-cptools screenshot \
+# URL检测
+cptools url404 \
   --host http://example.com \
   --csv data.csv \
   -c 10
@@ -142,5 +171,5 @@ cptools screenshot \
 
 ---
 
-**版本**: 1.0.0  
-**最后更新**: 2024-12-28
+**版本**: 1.1.0  
+**最后更新**: 2024-12-29
