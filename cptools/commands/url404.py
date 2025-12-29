@@ -44,10 +44,13 @@ from cptools.utils.dingding import send_dingding_notification
             '4287708f',
     help='钉钉机器人签名密钥（默认已配置）')
 @click.option(
+    '--no-dingding', is_flag=True, default=False,
+    help='禁用钉钉通知（调试时使用）')
+@click.option(
     '--timeout', default=30000, type=int,
     help='页面加载超时时间（毫秒，默认：30000）')
 def url404(host, csv_file, log, html, concurrency,
-           dingding_webhook, dingding_secret, timeout):
+           dingding_webhook, dingding_secret, no_dingding, timeout):
     """URL 404/500错误检测工具
 
     从CSV文件读取URL列表并检测状态码。CSV文件应包含以下列：
@@ -153,7 +156,7 @@ def url404(host, csv_file, log, html, concurrency,
         logger.error(f"生成HTML报告失败: {str(e)}")
 
     # 发送钉钉通知
-    if dingding_webhook:
+    if dingding_webhook and not no_dingding:
         try:
             notification_content = f"""### 🔍 URL 404检测任务完成
 
@@ -179,8 +182,11 @@ def url404(host, csv_file, log, html, concurrency,
                     secret=dingding_secret
                 )
             )
+            logger.info("钉钉通知发送成功")
         except Exception as e:
             logger.error(f"发送钉钉通知失败: {str(e)}")
+    elif no_dingding:
+        logger.info("已禁用钉钉通知（--no-dingding）")
 
     # 如果有失败的任务，以非零状态码退出
     if error_404 + error_500 + other_errors > 0:
