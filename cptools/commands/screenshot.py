@@ -39,12 +39,12 @@ from cptools.utils.dingding import send_dingding_notification
 @click.option(
     '--dingding-webhook',
     default='https://oapi.dingtalk.com/robot/send?access_token='
-            '1ca8024bc1c862b478d67bc957ea6a0a4e0b3e6f5cb610f189e128228cf7251a',
+            'ce631c399761d21df6460018238a6fd22c237e3feb7021c580f34967c9a6e951',
     help='钉钉机器人Webhook URL（默认已配置）')
 @click.option(
     '--dingding-secret',
-    default='SECdaf4d24ecac8732c1f8d63ee8df611ee623921ba6b450935acf4816'
-            '6a69192e2',
+    default='SECdc9d0205aebf46618039a4bf770cb69ed87173bc7270cead292136c1'
+            '4287708f',
     help='钉钉机器人签名密钥（默认已配置）')
 @click.option(
     '--timeout', default=30000, type=int,
