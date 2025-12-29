@@ -6,6 +6,7 @@
 
 - 🖼️ **网页截屏**: 基于Playwright的高质量网页截图
 - 🔍 **URL检测**: 批量检测URL状态码，识别404/500错误
+- 📦 **产品主图下载**: 批量下载CafePress产品主图
 - 🚀 **并发执行**: 支持多任务并发，提高执行效率
 - 📊 **HTML报告**: 自动生成可视化的执行结果报告
 - 📢 **钉钉通知**: 支持任务完成后发送钉钉通知
@@ -56,6 +57,7 @@ setup_venv.bat
 详细文档请查看 [docs](docs/) 目录：
 
 - **[快速开始指南](docs/getting-started/QUICKSTART.md)** - 5分钟快速上手
+- **[产品主图下载快速入门](docs/getting-started/DOWNLOADMIPS_QUICKSTART.md)** - downloadmips 工具快速上手
 - **[使用示例](docs/getting-started/EXAMPLES.md)** - 丰富的实战示例
 - **[命令速查表](docs/reference/CHEATSHEET.md)** - 快速命令参考
 - **[开发指南](docs/development/DEVELOPMENT.md)** - 贡献代码指南
@@ -134,6 +136,76 @@ cptools url404 \
   --log ./logs/url404.log
 ```
 
+### 产品主图下载工具
+
+```bash
+cptools downloadmips [选项]
+```
+
+**常用选项：**
+
+| 选项 | 说明 |
+|------|------|
+| `--host`, `-h` | 主机地址（必需，如: https://www.cafepress.com）|
+| `--csv` | CSV文件路径（必需，包含product_no列）|
+| `--output`, `-o` | 图片保存目录 |
+| `--log`, `-l` | 日志文件路径 |
+| `--html` | HTML报告路径 |
+| `-c` | 并发数量（默认3，建议不要太大） |
+
+**示例：**
+
+```bash
+# 基本使用 - US站点
+cptools downloadmips --host https://www.cafepress.com --csv products.csv
+
+# AU站点
+cptools downloadmips -h https://www.cafepress.com.au --csv products.csv
+
+# 完整配置
+cptools downloadmips \
+  -h https://www.cafepress.com \
+  --csv products.csv \
+  --output ./product_images \
+  -c 3 \
+  --log ./logs/download.log \
+  --html ./report.html
+```
+
+**支持的地区：**
+
+| 地区 | URL |
+|------|-----|
+| US | https://www.cafepress.com |
+| AU | https://www.cafepress.com.au |
+| UK | https://www.cafepress.co.uk |
+| CA | https://www.cafepress.ca |
+
+**CSV 格式：**
+
+```csv
+product_no
+629442244
+629442245
+629442246
+```
+
+**产品URL格式**: `{host}/+,{product_no}`
+
+**输出结构**:
+
+```
+mips/
+├── 629442244/
+│   ├── 629442244_01.jpg
+│   ├── 629442244_02.jpg
+│   └── ...
+├── 629442245/
+│   └── ...
+└── 629442246/
+    └── ...
+```
+
 ## CSV 文件格式
 
 ```csv
@@ -183,9 +255,11 @@ cptools --version
 cptools --help
 cptools screenshot --help
 cptools url404 --help
+cptools downloadmips --help
 
 # 运行测试
 ./test.sh
+./test_downloadmips.sh
 
 # 查看项目信息
 ./info.sh

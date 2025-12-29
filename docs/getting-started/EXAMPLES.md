@@ -1,6 +1,8 @@
 # 使用示例
 
-## 示例1：基本使用
+## 截屏工具示例
+
+### 示例1：基本使用
 
 截取指定网站的多个页面：
 
@@ -13,7 +15,7 @@ cptools screenshot \
   --html ./reports/result.html
 ```
 
-## 示例2：高并发截图
+### 示例2：高并发截图
 
 使用更高的并发数来加速大量页面的截图：
 
@@ -219,4 +221,173 @@ cptools screenshot --host http://www.example.com --csv daily.csv --output .\dail
 ```
 
 然后在任务计划程序中添加该批处理文件的定时任务。
+
+## 产品主图下载工具示例
+
+### 示例1：基本使用
+
+下载单个或多个产品的主图：
+
+```bash
+# 创建产品列表
+cat > products.csv << EOF
+product_no
+629442244
+629442245
+629442246
+EOF
+
+# 执行下载 - US 站点
+cptools downloadmips --host https://www.cafepress.com --csv products.csv
+```
+
+### 示例2：不同地区站点
+
+```bash
+# AU 站点
+cptools downloadmips -h https://www.cafepress.com.au --csv products.csv
+
+# UK 站点
+cptools downloadmips -h https://www.cafepress.co.uk --csv products.csv
+
+# CA 站点
+cptools downloadmips -h https://www.cafepress.ca --csv products.csv
+
+# 测试环境
+cptools downloadmips -h https://test.cafepress.com --csv products.csv
+```
+
+### 示例3：指定输出目录
+
+```bash
+cptools downloadmips \
+  -h https://www.cafepress.com \
+  --csv products.csv \
+  --output ./product_images
+```
+
+### 示例4：调整并发数
+
+```bash
+# 保守模式（避免被封）
+cptools downloadmips -h https://www.cafepress.com --csv products.csv -c 1
+
+# 加速模式（需谨慎）
+cptools downloadmips -h https://www.cafepress.com --csv products.csv -c 5
+```
+
+### 示例5：完整配置
+
+```bash
+cptools downloadmips \
+  --host https://www.cafepress.com \
+  --csv products.csv \
+  --output ./images/$(date +%Y%m%d) \
+  --log ./logs/download_$(date +%Y%m%d).log \
+  --html ./reports/download_$(date +%Y%m%d).html \
+  -c 3 \
+  --no-dingding
+```
+
+```bash
+# 准备大量产品编号的CSV
+cat > large_products.csv << EOF
+product_no
+629442244
+629442245
+629442246
+629442247
+629442248
+...（更多产品编号）
+EOF
+
+# 使用保守的并发数
+cptools downloadmips \
+  -h https://www.cafepress.com \
+  --csv large_products.csv \
+  -c 2 \
+  --timeout 60000
+```
+
+### 示例6：与钉钉通知集成
+
+```bash
+cptools downloadmips \
+  -h https://www.cafepress.com \
+  --csv products.csv \
+  --dingding-webhook "https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN" \
+  --dingding-secret "YOUR_SECRET"
+```
+
+### 示例7：从Excel生成CSV后下载
+
+```bash
+# 假设你有Excel文件，先转换为CSV
+# 可以使用在线工具或命令行工具转换
+
+# 然后执行下载
+cptools downloadmips -h https://www.cafepress.com --csv converted_products.csv
+```
+
+### 示例8：检查下载结果
+
+```bash
+# 下载完成后
+cptools downloadmips -h https://www.cafepress.com --csv products.csv
+
+# 检查文件结构
+tree mips/
+
+# 查看下载的图片数量
+find mips/ -type f -name "*.jpg" | wc -l
+
+# 查看某个产品的图片
+ls -lh mips/629442244/
+```
+
+### 输出结构示例
+
+执行后的目录结构：
+
+```
+mips/
+├── 629442244/
+│   ├── 629442244_01.jpg  # 第一张产品图
+│   ├── 629442244_02.jpg  # 第二张产品图
+│   ├── 629442244_03.jpg  # 第三张产品图
+│   └── 629442244_04.jpg  # 第四张产品图
+├── 629442245/
+│   ├── 629442245_01.jpg
+│   ├── 629442245_02.jpg
+│   └── 629442245_03.jpg
+└── 629442246/
+    ├── 629442246_01.jpg
+    └── 629442246_02.jpg
+
+downloadmips_result.html  # HTML报告
+logs/downloadmips_20241229_162021.log  # 日志文件
+```
+
+### CSV 格式要求
+
+支持多种列名格式：
+
+```csv
+# 格式1：product_no
+product_no
+629442244
+629442245
+
+# 格式2：PRODUCT_NO
+PRODUCT_NO
+629442244
+629442245
+
+# 格式3：product_id
+product_id
+629442244
+629442245
+```
+
+所有格式都能被正确识别（不区分大小写）。
 

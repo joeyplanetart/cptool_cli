@@ -2,6 +2,121 @@
 
 ## 版本 1.1.0 - 2024-12-29
 
+### 📦 新增产品主图下载工具
+
+我们为 CPTools 添加了全新的产品主图下载功能！现在你可以批量下载 CafePress 产品的主图。
+
+#### ✨ 新增功能
+
+1. **downloadmips 命令**
+   - 批量下载产品主图
+   - 自动创建产品文件夹（以 product_no 命名）
+   - 图片按序号命名（product_no_01, product_no_02...）
+   - 支持并发下载
+   - 内置反爬虫机制
+
+2. **表格式 HTML 报告**
+   - 清晰的表格展示
+   - 每个产品一行
+   - 缩略图预览
+   - 点击放大查看
+   - 响应式设计
+
+3. **产品维度统计**
+   - 总产品数
+   - 成功数量
+   - 失败数量
+   - 下载图片总数
+
+4. **钉钉通知**
+   - 任务完成自动通知
+   - 包含详细统计信息
+
+#### 🚀 使用方法
+
+```bash
+# 基本使用
+cptools downloadmips --csv products.csv
+
+# 指定输出目录
+cptools downloadmips --csv products.csv --output ./images
+
+# 完整配置
+cptools downloadmips \
+  --csv products.csv \
+  --output ./product_images \
+  -c 3 \
+  --log ./logs/download.log \
+  --html ./report.html
+```
+
+#### 📂 新增文件
+
+```
+cptools/
+├── commands/
+│   └── downloadmips.py        # 新增 - 产品主图下载命令
+└── utils/
+    └── downloadmips_report.py # 新增 - 产品下载报告生成器
+
+docs/
+├── guides/
+│   └── DOWNLOADMIPS.md        # 新增 - downloadmips 使用指南
+└── getting-started/
+    └── DOWNLOADMIPS_QUICKSTART.md  # 新增 - 快速入门
+
+test_downloadmips.sh           # 新增 - 测试脚本
+test_downloadmips.csv          # 新增 - 测试数据
+```
+
+#### 🔧 命令参数
+
+```bash
+cptools downloadmips [选项]
+
+必需参数:
+  --csv PATH                   CSV文件路径（包含 product_no 列）
+
+可选参数:
+  --output, -o TEXT            图片保存目录（默认: ./mips）
+  --log, -l TEXT               日志文件路径
+  --html TEXT                  HTML报告路径（默认: ./downloadmips_result.html）
+  -c, --concurrency INTEGER    并发数量（默认: 3）
+  --timeout INTEGER            超时时间（默认: 30000ms）
+  --dingding-webhook TEXT      钉钉Webhook
+  --dingding-secret TEXT       钉钉签名密钥
+  --no-dingding               禁用钉钉通知
+```
+
+#### 📊 输出结构
+
+```
+mips/
+├── 629442244/
+│   ├── 629442244_01.jpg
+│   ├── 629442244_02.jpg
+│   ├── 629442244_03.jpg
+│   └── 629442244_04.jpg
+├── 629442245/
+│   ├── 629442245_01.jpg
+│   └── ...
+└── 629442246/
+    └── ...
+```
+
+#### 📖 文档
+
+详细使用指南请查看：
+- [产品主图下载使用指南](docs/guides/DOWNLOADMIPS.md)
+- [快速入门](docs/getting-started/DOWNLOADMIPS_QUICKSTART.md)
+- [README.md](README.md)
+
+#### 🔄 版本更新
+
+- 更新 CLI 主命令描述
+- 更新 README 功能列表
+- 新增测试脚本
+
 ### 🔍 新增 URL 404检测工具
 
 我们为 CPTools 添加了全新的 URL 状态码检测功能！现在你可以批量检测 URL 是否存在 404、500 等错误。
