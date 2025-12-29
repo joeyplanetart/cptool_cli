@@ -1,10 +1,11 @@
 # CPTools - 命令行工具集
 
-基于Python的命令行工具集，提供网页截屏等实用功能。
+基于Python的命令行工具集，提供网页截屏、URL检测等实用功能。
 
 ## 功能特性
 
 - 🖼️ **网页截屏**: 基于Playwright的高质量网页截图
+- 🔍 **URL检测**: 批量检测URL状态码，识别404/500错误
 - 🚀 **并发执行**: 支持多任务并发，提高执行效率
 - 📊 **HTML报告**: 自动生成可视化的执行结果报告
 - 📢 **钉钉通知**: 支持任务完成后发送钉钉通知
@@ -100,6 +101,39 @@ cptools screenshot \
   --dingding-webhook https://oapi.dingtalk.com/robot/send?access_token=TOKEN
 ```
 
+### URL 404检测工具
+
+```bash
+cptools url404 [选项]
+```
+
+**常用选项：**
+
+| 选项 | 说明 |
+|------|------|
+| `--host`, `-h` | 默认主机地址（必需）|
+| `--csv` | CSV文件路径（必需）|
+| `--log`, `-l` | 日志文件路径 |
+| `--html` | HTML报告路径 |
+| `-c` | 并发数量 |
+
+**示例：**
+
+```bash
+# 基本使用
+cptools url404 --host http://www.cafepress.com --csv test_10.csv
+
+# 自定义报告路径
+cptools url404 --host http://example.com --csv urls.csv --html ./reports/url404_result.html
+
+# 高并发检测
+cptools url404 \
+  --host http://example.com \
+  --csv urls.csv \
+  -c 10 \
+  --log ./logs/url404.log
+```
+
 ## CSV 文件格式
 
 ```csv
@@ -148,6 +182,7 @@ cptools --version
 # 查看帮助
 cptools --help
 cptools screenshot --help
+cptools url404 --help
 
 # 运行测试
 ./test.sh

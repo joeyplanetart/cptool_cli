@@ -5,10 +5,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="cptools",
-    version="1.0.0",
+    version="1.1.0",
     author="Joey Zhou",
     author_email="Joeyz@planetart.com",
-    description="命令行工具集，包含截屏等功能",
+    description="命令行工具集，包含截屏、URL检测等功能",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/joeyplanetart/cptool_cli",

@@ -1,0 +1,7 @@
+PTN_NO,PRODUCT_ID,URL
+1,Test Page 1,+valid-page
+2,Test 404 Page,+this-page-does-not-exist-404
+3,Test Page 2,+another-valid-page
+4,Invalid Page,+invalid-url-test-404
+5,Good Page,+test-good-page
+
