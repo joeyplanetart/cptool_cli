@@ -57,3 +57,5 @@ Thumbs.db
 test_data/
 test_*.csv
 
+test_downloadmips.csv
+test_screenshot.csv
