@@ -55,4 +55,5 @@ Thumbs.db
 
 # Test files
 test_data/
+test_*.csv
 
