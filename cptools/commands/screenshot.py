@@ -187,24 +187,22 @@ def screenshot(host, csv_file, output, log, html, concurrency,
     # 发送钉钉通知
     if dingding_webhook and not no_dingding:
         try:
-            notification_content = f"""### 📸 截屏任务完成
+            notification_content = f"""### 📸 Screenshot Task Completed
 
-**执行时间**: {start_time.strftime('%Y-%m-%d %H:%M:%S')}
+**Time**: {start_time.strftime('%Y-%m-%d %H:%M:%S')}
 
-**执行结果**:
-- 总数: {total}
-- 成功: {success} ✅
-- 失败: {failed} ❌
-- 耗时: {duration:.2f}秒
+**Results**: Total {total} | Success {success}✅ | Failed {failed}❌
 
-**主机地址**: {host}
+**Duration**: {duration:.2f}s
 
-**CSV文件**: {csv_file}
+**Host**: `{host}`
+
+**File**: `{csv_file}`
 """
             asyncio.run(
                 send_dingding_notification(
                     dingding_webhook,
-                    "截屏任务完成",
+                    "Screenshot Task Completed",
                     notification_content,
                     secret=dingding_secret
                 )

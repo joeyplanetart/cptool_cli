@@ -158,26 +158,22 @@ def url404(host, csv_file, log, html, concurrency,
     # 发送钉钉通知
     if dingding_webhook and not no_dingding:
         try:
-            notification_content = f"""### 🔍 URL 404检测任务完成
+            notification_content = f"""### 🔍 URL 404 Check Completed
 
-**执行时间**: {start_time.strftime('%Y-%m-%d %H:%M:%S')}
+**Time**: {start_time.strftime('%Y-%m-%d %H:%M:%S')}
 
-**执行结果**:
-- 总数: {total}
-- 成功: {success} ✅
-- 404错误: {error_404} ⚠️
-- 500错误: {error_500} ❌
-- 其他错误: {other_errors}
-- 耗时: {duration:.2f}秒
+**Results**: Total {total} | OK {success}✅ | 404 {error_404}⚠️ | 500+ {error_500}❌
 
-**主机地址**: {host}
+**Duration**: {duration:.2f}s
 
-**CSV文件**: {csv_file}
+**Host**: `{host}`
+
+**File**: `{csv_file}`
 """
             asyncio.run(
                 send_dingding_notification(
                     dingding_webhook,
-                    "URL 404检测任务完成",
+                    "URL 404 Check Completed",
                     notification_content,
                     secret=dingding_secret
                 )

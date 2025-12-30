@@ -185,19 +185,15 @@ def downloadmips(host, csv_file, output, log, html, concurrency,
     # 发送钉钉通知
     if dingding_webhook and not no_dingding:
         try:
-            notification_content = f"""### 🖼️ Product MIPs Download Task \
-Completed
+            notification_content = f"""### 🖼️ Product MIPs Download Completed
 
-**Execution Time**: {start_time.strftime('%Y-%m-%d %H:%M:%S')}
+**Time**: {start_time.strftime('%Y-%m-%d %H:%M:%S')}
 
-**Execution Results**:
-- Total Product Count: {total}
-- Success: {success} ✅
-- Failed: {failed} ❌
-- Downloaded Image Count: {total_images}
-- Duration: {duration:.2f} seconds
+**Results**: Total {total} | Success {success}✅ | Failed {failed}❌
 
-**CSV File**: {csv_file}
+**Images**: {total_images} downloaded in {duration:.2f}s
+
+**File**: `{csv_file}`
 """
             asyncio.run(
                 send_dingding_notification(
